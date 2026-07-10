@@ -23,22 +23,6 @@ a discord bot framework written in bash.
 
 INTENTS=$(( (1 << 0) | (1 << 9) | (1 << 15) )) # Declare your gateway intents.
 
-# Declare how you want to handle messages
-handle_message() {
-    local channel_id=$1 content=$2 author_is_bot=$3 
-
-    [[ "$author_is_bot" == "true" ]] && return   # ignore bots (including ourselves)
-
-    case "$content" in
-	# Add cmds as you wish
-        "!ping")
-            send_message "$channel_id" "Pong!" # Send a message
-            ;;
-        "!bash")
-            ./cog/tts.sh # or call a cog.
-            ;;
-    esac
-}
 # Declare how you want to handle events
 handle_dispatch() {
     local event_type=$1 data=$2
@@ -55,7 +39,17 @@ handle_dispatch() {
             content=$(echo "$data" | jq -r '.content')
             is_bot=$(echo "$data" | jq -r '.author.bot // false')
             message_id=$(echo "$data" | jq -r '.message_id // false')
-            handle_message "$channel_id" "$content" "$is_bot" "$message_id"
+            [[ "$author_is_bot" == "true" ]] && return   # ignore bots (including ourselves)
+
+            case "$content" in
+	        # Add cmds as you wish
+                "!ping")
+                    send_message "$channel_id" "Pong!" # Send a message
+                    ;;
+                "!bash")
+                    ./cogs/tts.sh # or call a cog.
+                    ;;
+            esac
             ;;
         *)
             : # noop
