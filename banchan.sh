@@ -78,6 +78,7 @@ start_heartbeat() {
 		while true; do
 			seq=$(cat "$SEQ_FILE" 2>/dev/null || echo null)
 			gw_send "$(jq -nc --argjson seq "$seq" '{op:1, d:$seq}')"
+			log "<3"
 			sleep "$interval_s"
 		done
 	) &
