@@ -39,7 +39,7 @@ handle_dispatch() {
             content=$(echo "$data" | jq -r '.content')
             is_bot=$(echo "$data" | jq -r '.author.bot // false')
             message_id=$(echo "$data" | jq -r '.message_id // false')
-            [[ "$author_is_bot" == "true" ]] && return   # ignore bots (including ourselves)
+            [[ "$is_bot" == "true" ]] && return   # ignore bots (including ourselves)
 
             case "$content" in
 	        # Add cmds as you wish
